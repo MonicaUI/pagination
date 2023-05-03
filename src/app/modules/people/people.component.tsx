@@ -2,22 +2,30 @@ import { useState, useEffect } from "react";
 import { Person, PeopleQueryState } from "./model";
 import { usePeopleQuery } from "./query";
 
-
 import "./people.css";
 
 export function People() {
-  const { data: people, loading, error, visible } = usePeopleQuery();
-  const [peopleData, setPeopleData] = useState<Person[] | undefined>()
+  const { data: people, loading, error } = usePeopleQuery();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredPeople, setFilteredPeople] = useState<Person[] | undefined>();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
-  const handleSearch = () => {
-    const input = document.getElementById(
-      'Name',
-    ) as HTMLInputElement;
-    if (input !== null) {
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  useEffect(() => {
+    if (!searchTerm) {
+      setFilteredPeople(people);
+    } else {
+      setFilteredPeople(
+        people?.filter((person) =>
+          person.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
     }
-  }
-
-  useEffect(() => setPeopleData(people), [peopleData]);
+  }, [searchTerm, people]);
 
   const renderCells = ({ name, show, actor, movies, dob }: Person) => (
     <>
@@ -33,6 +41,10 @@ export function People() {
     </>
   );
 
+  const handlePageClick = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
   if (loading) {
     return <p>Fetching People...</p>;
   }
@@ -41,13 +53,28 @@ export function People() {
     return <h2>Oops! looks like something went wrong!</h2>;
   }
 
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredPeople?.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil((filteredPeople?.length || 0) / itemsPerPage);
 
   return (
     <>
-      <div>No People Available.</div>
-      <label >Search:</label>
-      <input type="text" id="Name" name="Name" ></input>
-      <button onClick={() => handleSearch()}>Search</button>
+      {filteredPeople && filteredPeople.length > 0 ? (
+        <div>
+          Showing {filteredPeople.length} out of {people?.length} results
+        </div>
+      ) : (
+        <div>No People Available.</div>
+      )}
+      <label>Search:</label>
+      <input
+        type="text"
+        id="Name"
+        name="Name"
+        value={searchTerm}
+        onChange={handleSearch}
+      />
       <table>
         <thead>
           <tr>
@@ -60,11 +87,29 @@ export function People() {
         </thead>
 
         <tbody>
-          {people.slice(0, visible).map((people, index) => (
-            <tr key={index}>{renderCells(people)}</tr>
+          {currentItems?.map((person, index) => (
+            <tr key={index}>{renderCells(person)}</tr>
           ))}
         </tbody>
       </table>
+      {/* <div>
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
+          <button key={pageNumber} onClick={() => handlePageClick(pageNumber)}>
+            {pageNumber}
+          </button>
+        ))}
+      </div> */}
+      <div className="pagination">
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
+          <button
+            key={pageNumber}
+            onClick={() => handlePageClick(pageNumber)}
+            className={pageNumber === currentPage ? "selected-page" : ""}
+          >
+            {pageNumber}
+          </button>
+        ))}
+      </div>
     </>
   );
 }

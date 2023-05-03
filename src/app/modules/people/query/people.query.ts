@@ -11,7 +11,7 @@ export const usePeopleQuery = (): PeopleQueryState => {
 
   const fetchPeoples = async () => {
     try {
-      const { data } = await axios.get<Person[]>(`/${API_RESOURCE.PEOPLE}`);
+      const { data } = await axios.get<Person[]>(`/mock-api/${API_RESOURCE.PEOPLE}`);
       data.sort(function (a: any, b: any) {
         if (a.name < b.name) { return -1; }
         if (a.name > b.name) { return 1; }
