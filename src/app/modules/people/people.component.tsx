@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Person, PeopleQueryState } from "./model";
 import { usePeopleQuery } from "./query";
 
@@ -9,7 +9,10 @@ export function People() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredPeople, setFilteredPeople] = useState<Person[] | undefined>();
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  const itemsPerPageRef = useRef(null);
+  const itemsPerPageOptions = [10, 15, 20];
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -58,15 +61,62 @@ export function People() {
   const currentItems = filteredPeople?.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil((filteredPeople?.length || 0) / itemsPerPage);
 
+  const peopleShownText = `Showing ${indexOfFirstItem + 1}-${
+    indexOfLastItem > filteredPeople?.length ? filteredPeople?.length : indexOfLastItem
+  } of ${people?.length}`;
+
+  const itemsPerPageSelect = (
+    <select
+      ref={itemsPerPageRef}
+      onChange={() => {
+        setCurrentPage(1);
+        setItemsPerPage(parseInt(itemsPerPageRef.current.value));
+      }}
+    >
+      {itemsPerPageOptions.map((option) => (
+        <option key={option} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  );
+
+  const navigationButtons = (
+    <div>
+      <button
+        onClick={() => setCurrentPage(1)}
+        disabled={currentPage === 1}
+      >
+        First
+      </button>
+      <button
+        onClick={() => setCurrentPage(currentPage - 1)}
+        disabled={currentPage === 1}
+      >
+        Previous
+      </button>
+      <button
+        onClick={() => setCurrentPage(currentPage + 1)}
+        disabled={currentPage === totalPages}
+      >
+        Next
+      </button>
+      <button
+        onClick={() => setCurrentPage(totalPages)}
+        disabled={currentPage === totalPages}
+      >
+        Last
+      </button>
+    </div>
+  );
+
   return (
     <>
       {filteredPeople && filteredPeople.length > 0 ? (
-        <div>
-          Showing {filteredPeople.length} out of {people?.length} results
-        </div>
+        <div>{peopleShownText}</div>
       ) : (
         <div>No People Available.</div>
-      )}
+              )}
       <label>Search:</label>
       <input
         type="text"
@@ -75,6 +125,11 @@ export function People() {
         value={searchTerm}
         onChange={handleSearch}
       />
+      <div>
+        <label>Items per page:</label>
+        {itemsPerPageSelect}
+      </div>
+      {navigationButtons}
       <table>
         <thead>
           <tr>
@@ -85,20 +140,12 @@ export function People() {
             <th>Movies</th>
           </tr>
         </thead>
-
         <tbody>
           {currentItems?.map((person, index) => (
             <tr key={index}>{renderCells(person)}</tr>
           ))}
         </tbody>
       </table>
-      {/* <div>
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
-          <button key={pageNumber} onClick={() => handlePageClick(pageNumber)}>
-            {pageNumber}
-          </button>
-        ))}
-      </div> */}
       <div className="pagination">
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
           <button
@@ -113,3 +160,4 @@ export function People() {
     </>
   );
 }
+
