@@ -70,7 +70,7 @@ export function People() {
       ref={itemsPerPageRef}
       onChange={() => {
         setCurrentPage(1);
-        setItemsPerPage(parseInt(itemsPerPageRef.current.value));
+        setItemsPerPage(parseInt(itemsPerPageRef?.current?.value));
       }}
     >
       {itemsPerPageOptions.map((option) => (
@@ -112,7 +112,7 @@ export function People() {
 
   return (
     <>
-      {filteredPeople && filteredPeople.length > 0 ? (
+      {filteredPeople && filteredPeople?.length > 0 ? (
         <div>{peopleShownText}</div>
       ) : (
         <div>No People Available.</div>
