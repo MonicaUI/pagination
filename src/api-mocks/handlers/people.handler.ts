@@ -4,8 +4,8 @@ import { API_RESOURCE } from "../../app/shared/constant";
 import { PEOPLE } from "../fixtures";
 import { delayedResponse } from "../utils";
 
-const BASE_URL = `https://pagination-eta.vercel.app/mock-api/${API_RESOURCE.PEOPLE}`;
-console.log(BASE_URL, API_RESOURCE.PEOPLE)
+const BASE_URL = `/mock-api/${API_RESOURCE.PEOPLE}`;
+
 export const getPeople =
   rest.get(BASE_URL + `/pagination?page=1&limit=10&sort=asc&search=ball`, (_req: any, _res, ctx) => {
     console.log(_req)
