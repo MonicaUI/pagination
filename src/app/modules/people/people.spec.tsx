@@ -46,22 +46,6 @@ describe("People", () => {
     ).toBeInTheDocument();
   });
 
-  // test("displays an empty state", async () => {
-  //   /**
-  //    * HINT: You need to alter the response from the api
-  //    * You can do so for this test
-  //    */
-
-  //   /**
-  //    * The following is changed as MSW is not being used
-  //    * Didn't alter response
-  //   */
-
-  //   await renderPeople();
-
-  //   expect(screen.getByText("No People Available.")).toBeInTheDocument();
-  // });
-
   test("should display 10 people by default", async () => {
     await renderPeople();
 
@@ -70,6 +54,25 @@ describe("People", () => {
     expect(screen.getAllByRole("row").slice(1)).toHaveLength(10);
   });
 
+  test("displays an empty state", async () => {
+    /**
+     * HINT: You need to alter the response from the api
+     * You can do so for this test
+     */
+
+    /**
+     * The following is changed as MSW is not being used
+     * Didn't alter response
+    */
+    const user = userEvent.setup();
+    await renderPeople();
+
+    expect(screen.getByRole("table")).toBeInTheDocument();
+
+    await user.type(screen.getByRole("textbox", { name: "Search" }), "FT");
+
+    expect(screen.getByText("No People Available.")).toBeInTheDocument();
+  });
   describe("Filtering", () => {
     test("should select the sort column", async () => {
       const user = userEvent.setup();
