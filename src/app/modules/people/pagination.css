@@ -1,0 +1,20 @@
+.pagination-button-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.pagination-page-info {
+    float: left;
+    margin: 0 20px;
+}
+
+.navBar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.createPerson {
+    float: right;
+}

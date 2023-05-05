@@ -1,0 +1,95 @@
+.modal {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    z-index: 1;
+}
+
+.modal .modal__content {
+    background-color: #0f77ff;
+    min-width: 70vw;
+    height: 70vh;
+    border-radius: 10px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 1.25rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal .modal__cover {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 5px;
+}
+
+.modal .modal__image {
+    border-radius: 5px;
+    width: 200px;
+}
+
+.modal .modal__info p {
+    margin-bottom: 0.25rem;
+}
+
+.modal .modal__book-title {
+    color: var(--color-text-title);
+    font-size: 1.125rem;
+    margin-bottom: 0.25rem;
+}
+
+.modal .modal__book-info {
+    color: var(--color-text-main);
+}
+
+.modal.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+@media (min-width: 900px) {
+    .modal__content {
+        min-width: 50vw;
+    }
+}
+
+.formInput {
+    margin: 20px;
+    display: flex;
+    justify-content: space-evenly;
+}
+.formInput > label {
+    width:200px;
+}
+
+.modal__content > button {
+    background-color: transparent;
+}
+.modal__content > button > span {
+    float: right;
+    font-weight: bolder;
+    font-size: larger;
+}
+
+.submit {
+    background: white !important;
+    color: black;
+    margin: 30px 0 0 300px;
+    width: 200px;
+}

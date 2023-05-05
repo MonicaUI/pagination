@@ -19,4 +19,6 @@ export interface PeopleQueryState {
   data?: Person[];
   error?: AxiosError;
   visible?: number;
+  page?: number;
+  searchValue?: string;
 }
