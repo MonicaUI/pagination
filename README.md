@@ -6,6 +6,8 @@
 - This application is built using [React](https://reactjs.org/), [Vite](https://vitejs.dev/) and [Typescript](https://www.typescriptlang.org/).
 - To open the application run the following:
 
+#TEST
+
 ```bash
 yarn
 yarn dev
