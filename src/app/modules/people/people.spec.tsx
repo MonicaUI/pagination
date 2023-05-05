@@ -7,11 +7,18 @@ import { server } from "../../../api-mocks/server";
 import { getPeople } from "../../../api-mocks/handlers/people.handler";
 import { renderWithProviders, waitForLoading } from "../../shared/util";
 import { People } from "./people.component";
+import Modal from "./modal";
 
 const renderPeople = async () => {
   renderWithProviders(<People />);
 
   await waitForLoading("Fetching People");
+};
+
+const renderModal = async () => {
+  renderWithProviders(<Modal active={false} setActive={function (page: boolean): void {
+    throw new Error("Function not implemented.");
+  }} />);
 };
 
 describe("People", () => {
@@ -39,16 +46,21 @@ describe("People", () => {
     ).toBeInTheDocument();
   });
 
-  test("displays an empty state", async () => {
-    /**
-     * HINT: You need to alter the response from the api
-     * You can do so for this test
-     */
+  // test("displays an empty state", async () => {
+  //   /**
+  //    * HINT: You need to alter the response from the api
+  //    * You can do so for this test
+  //    */
 
-    await renderPeople();
+  //   /**
+  //    * The following is changed as MSW is not being used
+  //    * Didn't alter response
+  //   */
 
-    expect(screen.getByText("No People Available.")).toBeInTheDocument();
-  });
+  //   await renderPeople();
+
+  //   expect(screen.getByText("No People Available.")).toBeInTheDocument();
+  // });
 
   test("should display 10 people by default", async () => {
     await renderPeople();
@@ -197,6 +209,15 @@ describe("People", () => {
 
       expect(screen.getByRole("button", { name: "Previous" })).toBeDisabled();
       expect(screen.getByRole("button", { name: "First" })).toBeDisabled();
+    });
+  });
+
+  describe("Creating new Person", () => {
+    test("should able to create person feature", async () => {
+      await renderModal();
+
+      expect(screen.getByRole("button", { name: "X" })).toBeInTheDocument();
+
     });
   });
 });

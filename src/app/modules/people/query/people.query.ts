@@ -4,28 +4,23 @@ import { API_RESOURCE } from "../../../shared/constant";
 import { useAxios } from "../../../shared/context";
 import { Person, PeopleQueryState } from "../model";
 
-export const usePeopleQuery = (): PeopleQueryState => {
+export const usePeopleQuery = (page: number, searchValue: string, recordCount: number, sortedAsc: string): PeopleQueryState => {
   const axios = useAxios();
-  const [state, setState] = useState<PeopleQueryState>({ loading: false });
-  // const [visible, setVisible] = useState(10)
+  const [state, setState] = useState<PeopleQueryState>({ loading: false, searchValue: "", data: [] });
+
 
   const fetchPeoples = async () => {
     try {
-      const { data } = await axios.get<Person[]>(`/${API_RESOURCE.PEOPLE}`);
-      data.sort(function (a: any, b: any) {
-        if (a.name < b.name) { return -1; }
-        if (a.name > b.name) { return 1; }
-        return 0;
-      })
-      setState({ data, loading: false, error: undefined, visible: 10 });
+      const { data } = await axios.get<Person[]>(`/${API_RESOURCE.PEOPLE}/pagination?page=${page}&limit=100&sort=${sortedAsc}&search=`);
+      setState({ data, loading: false, error: undefined, page });
+
     } catch (error) {
       setState({ data: undefined, error: error as AxiosError, loading: false });
     }
   };
 
   useEffect(() => {
-    setState({ loading: true });
-
+    setState({ loading: true, page });
     fetchPeoples();
   }, []);
 
