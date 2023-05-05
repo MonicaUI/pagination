@@ -1,3 +1,3 @@
 export const API_RESOURCE = {
-  PEOPLE: "people",
+  PEOPLE: "mock-api/people",
 } as const;
